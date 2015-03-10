@@ -118,7 +118,7 @@
     </bean>
 
 
-    <bean id="datasources" class="org.oyach.mybatis.datasource.RoutingDataSource">
+    <bean id="datasources" class="org.oyach.mybatis.datasource.DynamicDataSource">
         <property name="targetDataSources">
             <map key-type="java.lang.String"> <!-- 数据源配置 -->
                 <entry key="db-part-01">
@@ -140,4 +140,6 @@
     </bean>
 
 
+    <bean id="multiDataSourceAspect"
+          class="com.sankuai.meituan.waimai.datasource.multi.aspect.MultipleDataSourceAspect"/>
 </beans>

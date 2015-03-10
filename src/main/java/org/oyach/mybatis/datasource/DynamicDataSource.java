@@ -14,7 +14,7 @@ import java.util.Map;
  * @version Last modified 15/3/6
  * @since 0.0.1
  */
-public class RoutingDataSource extends AbstractRoutingDataSource {
+public class DynamicDataSource extends AbstractRoutingDataSource {
 
     /**
      * 记录当前线程选择哪个库

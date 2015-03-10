@@ -26,6 +26,6 @@ public class MoreDataBasePlugin implements Interceptor {
 
     @Override
     public void setProperties(Properties properties) {
-
+        System.out.println("===========setProperties============");
     }
 }

@@ -18,7 +18,8 @@
 
     <plugins>
         <plugin interceptor="org.oyach.mybatis.plugin.MoreDataBasePlugin">
-            <property name="tableName" value="course:course,course2"/>
+            <!--指定使用什么类型方式进行多表分离  读写 读写+自定义 -->
+            <property name="type" value="#{T(org.oyach.mybatis.datasource.MoreDataBaseType).READ_WRITE}"/>
         </plugin>
     </plugins>
 
