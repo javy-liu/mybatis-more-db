@@ -7,6 +7,6 @@ package org.oyach.mybatis.datasource;
  * @version Last modified 15/3/6
  * @since 0.0.1
  */
-public enum DataSourcePartitionType {
-    READ_WRITE, CUSTOM
+public interface DataSourcePartitionType {
+
 }
