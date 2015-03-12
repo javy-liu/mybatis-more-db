@@ -85,7 +85,7 @@
     </bean>
 
     <bean id="mybatisTransactionManager"
-          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager" lazy-init="true">
         <property name="dataSource" ref="dynamicDataSource"/>
     </bean>
 
@@ -110,10 +110,13 @@
         </tx:attributes>
     </tx:advice>
 
-
+    <bean id="useDataSourceSupport" class="org.oyach.mybatis.aop.UseDataSourceSupport">
+        <property name="advice" ref="mybatisAdvice"/>
+    </bean>
 
     <aop:config>
         <aop:pointcut id="pc" expression="execution(public * org.oyach.mybatis.dao.*.*(..))" />
+        <aop:advisor advice-ref="useDataSourceSupport" pointcut-ref="pc"/>
         <aop:advisor pointcut-ref="pc" advice-ref="mybatisAdvice" />
     </aop:config>
 

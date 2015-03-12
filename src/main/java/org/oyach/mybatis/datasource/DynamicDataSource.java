@@ -3,9 +3,11 @@ package org.oyach.mybatis.datasource;
 import org.oyach.mybatis.datasource.config.DataSourcePartitionConfigFactory;
 import org.springframework.core.NamedThreadLocal;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
+import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import javax.sql.DataSource;
+import java.util.List;
 import java.util.Map;
 
 /**
