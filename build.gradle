@@ -44,6 +44,7 @@ dependencies {
 
     compile 'org.springframework:spring-context:4.1.5.RELEASE',
             'org.springframework:spring-aop:4.1.5.RELEASE',
+            'org.springframework:spring-aspects:4.1.5.RELEASE',
             'org.springframework:spring-jdbc:4.1.5.RELEASE'
 
     compile 'com.zaxxer:HikariCP:2.3.3'

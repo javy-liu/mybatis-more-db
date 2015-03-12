@@ -7,5 +7,5 @@ package org.oyach.mybatis.aop;
  * @version Last modified 15/3/11
  * @since 0.0.1
  */
-public class UseDataSourceAop {
+public class UseDataSourceSupport {
 }

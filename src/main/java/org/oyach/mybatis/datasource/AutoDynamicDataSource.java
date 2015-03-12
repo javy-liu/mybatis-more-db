@@ -2,6 +2,9 @@ package org.oyach.mybatis.datasource;
 
 import org.oyach.mybatis.datasource.config.ConfigFactory;
 
+import javax.sql.DataSource;
+import java.util.Map;
+
 /**
  * 针对动态数据源进行扩展，方便进行配置
  *
@@ -19,6 +22,14 @@ public class AutoDynamicDataSource extends DynamicDataSource{
 
     public void setConfigFactory(ConfigFactory configFactory) {
         this.configFactory = configFactory;
-        // TODO 获取数据源  已经构造完整
     }
+
+
+    @Override
+    public void afterPropertiesSet() {
+        Map<Object, Object> dataSourceMap = configFactory.buildDataSourcePartitions();
+        super.setTargetDataSources(dataSourceMap);
+        super.afterPropertiesSet();
+    }
+
 }

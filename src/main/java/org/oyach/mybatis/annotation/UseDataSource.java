@@ -1,7 +1,5 @@
 package org.oyach.mybatis.annotation;
 
-import org.oyach.mybatis.datasource.DataSourceType;
-
 import java.lang.annotation.*;
 
 /**
@@ -22,13 +20,13 @@ public @interface UseDataSource {
      *
      * @return
      */
-    DataSourceType type();
+    String type();
 
     /**
      * 指定使用哪些数据源
      *
      * @return
      */
-    String[] dataSource() default {} ;
+    String[] dataSource() default {};
 
 }

@@ -7,5 +7,6 @@ import org.oyach.mybatis.datasource.DataSourcePartitionType;
  * @version Last modified 15/3/11
  * @since 0.0.1
  */
-public enum RwPartitionType implements DataSourcePartitionType {
+public enum RwPartitionType  {
+
 }

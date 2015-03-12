@@ -1,5 +1,7 @@
 package org.oyach.mybatis.dao;
 
+import org.apache.ibatis.annotations.Insert;
+import org.oyach.mybatis.domain.Student;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -9,4 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 public interface StudentMapper {
 
+//    @Transactional(readOnly = true)
+    @Insert("insert into student(id, name) values(#{id},#{name})")
+    long insertStudent(Student student);
 }

@@ -9,137 +9,112 @@
 
     <aop:aspectj-autoproxy/>
 
-    <!-- 01 -->
-    <bean id="hikariConfig01" class="com.zaxxer.hikari.HikariConfig">
-        <property name="poolName" value="springHikariCP" />
-        <property name="connectionTestQuery" value="SELECT 1" />
-        <property name="dataSourceClassName" value="com.mysql.jdbc.jdbc2.optional.MysqlDataSource" />
-        <property name="dataSourceProperties">
-            <props>
-                <prop key="url">jdbc:mysql://localhost:3306/mybatisReadSlow</prop>
-                <prop key="user">root</prop>
-                <prop key="password">root</prop>
-            </props>
+    <!-- 数据源 -->
+    <bean id="dataSourceConfigFactory" class="org.oyach.mybatis.datasource.config.DataSourcePartitionConfigFactory">
+        <property name="defaultDataSourceProperty">
+            <bean class="org.oyach.mybatis.datasource.config.DataSourceProperty">
+                <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+                <property name="user" value="root"/>
+                <property name="password" value="root"/>
+            </bean>
         </property>
-    </bean>
-
-    <bean id="dataSource01" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
-        <constructor-arg ref="hikariConfig01" />
-    </bean>
-
-    <!-- 02 -->
-    <bean id="hikariConfig02" class="com.zaxxer.hikari.HikariConfig">
-        <property name="poolName" value="springHikariCP" />
-        <property name="connectionTestQuery" value="SELECT 1" />
-        <property name="dataSourceClassName" value="com.mysql.jdbc.jdbc2.optional.MysqlDataSource" />
-        <property name="dataSourceProperties">
-            <props>
-                <prop key="url">jdbc:mysql://localhost:3306/mybatisReadSlow</prop>
-                <prop key="user">root</prop>
-                <prop key="password">root</prop>
-            </props>
-        </property>
-    </bean>
-
-    <bean id="dataSource02" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
-        <constructor-arg ref="hikariConfig01" />
-    </bean>
-
-    <!-- 03 -->
-    <bean id="hikariConfig03" class="com.zaxxer.hikari.HikariConfig">
-        <property name="poolName" value="springHikariCP" />
-        <property name="connectionTestQuery" value="SELECT 1" />
-        <property name="dataSourceClassName" value="com.mysql.jdbc.jdbc2.optional.MysqlDataSource" />
-        <property name="dataSourceProperties">
-            <props>
-                <prop key="url">jdbc:mysql://localhost:3306/mybatisReadSlow</prop>
-                <prop key="user">root</prop>
-                <prop key="password">root</prop>
-            </props>
-        </property>
-    </bean>
-
-    <bean id="dataSource03" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
-        <constructor-arg ref="hikariConfig01" />
-    </bean>
-
-    <!-- 01 -->
-    <bean id="hikariConfig04" class="com.zaxxer.hikari.HikariConfig">
-        <property name="poolName" value="springHikariCP" />
-        <property name="connectionTestQuery" value="SELECT 1" />
-        <property name="dataSourceClassName" value="com.mysql.jdbc.jdbc2.optional.MysqlDataSource" />
-        <property name="dataSourceProperties">
-            <props>
-                <prop key="url">jdbc:mysql://localhost:3306/mybatisReadSlow</prop>
-                <prop key="user">root</prop>
-                <prop key="password">root</prop>
-            </props>
-        </property>
-    </bean>
-
-    <bean id="dataSource04" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
-        <constructor-arg ref="hikariConfig01" />
-    </bean>
-
-    <!-- 05 -->
-    <bean id="hikariConfig05" class="com.zaxxer.hikari.HikariConfig">
-        <property name="poolName" value="springHikariCP" />
-        <property name="connectionTestQuery" value="SELECT 1" />
-        <property name="dataSourceClassName" value="com.mysql.jdbc.jdbc2.optional.MysqlDataSource" />
-        <property name="dataSourceProperties">
-            <props>
-                <prop key="url">jdbc:mysql://localhost:3306/mybatisReadSlow</prop>
-                <prop key="user">root</prop>
-                <prop key="password">root</prop>
-            </props>
-        </property>
-    </bean>
-
-    <bean id="dataSource05" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
-        <constructor-arg ref="hikariConfig01" />
-    </bean>
-
-    <!-- 06 -->
-    <bean id="hikariConfig06" class="com.zaxxer.hikari.HikariConfig">
-        <property name="poolName" value="springHikariCP" />
-        <property name="connectionTestQuery" value="SELECT 1" />
-        <property name="dataSourceClassName" value="com.mysql.jdbc.jdbc2.optional.MysqlDataSource" />
-        <property name="dataSourceProperties">
-            <props>
-                <prop key="url">jdbc:mysql://localhost:3306/mybatisReadSlow</prop>
-                <prop key="user">root</prop>
-                <prop key="password">root</prop>
-            </props>
-        </property>
-    </bean>
-
-    <bean id="dataSource06" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
-        <constructor-arg ref="hikariConfig01" />
-    </bean>
-
-
-    <bean id="datasources" class="org.oyach.mybatis.datasource.DynamicDataSource">
-        <property name="targetDataSources">
-            <map key-type="java.lang.String"> <!-- 数据源配置 -->
-                <entry key="db-part-01">
-                    <map key-type="org.oyach.mybatis.datasource.DataSourceType">
-                        <entry key="READ" value-ref="dataSource01"/>
-                        <entry key="WRITE" value-ref="dataSource02"/>
-                        <entry key="READ_SLOW" value-ref="dataSource03"/>
-                    </map>
+        <property name="dataSourcePartitions">
+            <map>
+                <entry key="db_01#write">
+                    <bean class="org.oyach.mybatis.datasource.config.DataSourceProperty">
+                        <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/mybatis_01_write"/>
+                    </bean>
                 </entry>
-                <entry key="db-part-02">
-                    <map key-type="org.oyach.mybatis.datasource.DataSourceType">
-                        <entry key="READ" value-ref="dataSource04"/>
-                        <entry key="WRITE" value-ref="dataSource05"/>
-                        <entry key="READ_SLOW" value-ref="dataSource06"/>
-                    </map>
+                <entry key="db_01#read">
+                    <bean class="org.oyach.mybatis.datasource.config.DataSourceProperty">
+                        <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/mybatis_01_read"/>
+                    </bean>
+                </entry>
+                <entry key="db_02#write">
+                    <bean class="org.oyach.mybatis.datasource.config.DataSourceProperty">
+                        <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/mybatis_02_write"/>
+                    </bean>
+                </entry>
+                <entry key="db_02#read">
+                    <bean class="org.oyach.mybatis.datasource.config.DataSourceProperty">
+                        <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/mybatis_02_read"/>
+                    </bean>
                 </entry>
             </map>
         </property>
     </bean>
 
 
-    <bean id="multiDataSourceAspect"
-          class="com.sankuai.meituan.waimai.datasource.multi.aspect.MultipleDataSourceAspect"/>
+    <!--<bean id="dataSource01" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">-->
+        <!--<constructor-arg ref="hikariConfig01" />-->
+    <!--</bean>-->
+
+    <bean id="dynamicDataSource" class="org.oyach.mybatis.datasource.AutoDynamicDataSource">
+       <property name="configFactory" ref="dataSourceConfigFactory"/>
+        <property name="defaultTargetDataSource">
+            <bean class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+                <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+                <property name="url" value="jdbc:mysql://localhost:3306/mybatis_02_default"/>
+                <property name="username" value="root"/>
+                <property name="password" value="root"/>
+            </bean>
+        </property>
+    </bean>
+
+
+    <!--  sqlSessionFactory for mybatis -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dynamicDataSource"/>
+        <!-- 配置mybatis配置文件的位置 -->
+        <property name="configLocation" value="classpath:mybatis-config.xml"/>
+        <!-- 配置扫描Mapper XML的位置,如果没有的可以删除,Mapper XML的暂时不支持 -->
+        <property name="mapperLocations" value="classpath:mapper/*Mapper.xml"/>
+    </bean>
+
+
+
+    <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg ref="sqlSessionFactory"/>
+    </bean>
+
+    <!-- 配置扫描Mapper接口的包路径 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!-- 如果是多个包名可用",; \t\n"中任意符号分隔开，详见：MapperScannerConfigurer[269行] -->
+        <property name="basePackage" value="org.oyach.mybatis.dao"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+    </bean>
+
+    <bean id="mybatisTransactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dynamicDataSource"/>
+    </bean>
+
+
+    <tx:annotation-driven transaction-manager="mybatisTransactionManager" />
+
+    <tx:advice id="mybatisAdvice" transaction-manager="mybatisTransactionManager">
+        <tx:attributes>
+            <tx:method name="save*" propagation="REQUIRED"/>
+            <tx:method name="insert*" read-only="true"/>
+            <tx:method name="add*" propagation="REQUIRED"/>
+            <tx:method name="update*" propagation="REQUIRED"/>
+            <tx:method name="delete*" propagation="REQUIRED"/>
+            <tx:method name="remove*" propagation="REQUIRED"/>
+            <tx:method name="accept*" propagation="REQUIRED"/>
+            <tx:method name="reject*" propagation="REQUIRED"/>
+            <tx:method name="execute*" propagation="REQUIRED"/>
+            <tx:method name="del*" propagation="REQUIRED"/>
+            <tx:method name="recover*" propagation="REQUIRED"/>
+            <tx:method name="sync*" propagation="REQUIRED"/>
+            <tx:method name="*" read-only="true"/>
+        </tx:attributes>
+    </tx:advice>
+
+
+
+    <aop:config>
+        <aop:pointcut id="pc" expression="execution(public * org.oyach.mybatis.dao.*.*(..))" />
+        <aop:advisor pointcut-ref="pc" advice-ref="mybatisAdvice" />
+    </aop:config>
+
 </beans>

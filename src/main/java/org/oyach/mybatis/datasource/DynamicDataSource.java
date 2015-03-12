@@ -1,5 +1,6 @@
 package org.oyach.mybatis.datasource;
 
+import org.oyach.mybatis.datasource.config.DataSourcePartitionConfigFactory;
 import org.springframework.core.NamedThreadLocal;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
@@ -19,7 +20,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
     /**
      * 记录当前线程选择哪个库
      */
-    private static final ThreadLocal<DataSourceKey> dataSourceKey = new NamedThreadLocal<>("dataSource key");
+    private static final NamedThreadLocal<DataSourcePartitionType> dataSourcePartitionType = new NamedThreadLocal<>("dataSource partition type");
 
     /**
     /**
@@ -29,14 +30,17 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
      */
     @Override
     protected DataSource determineTargetDataSource() {
-        DataSourceKey lookupKey = dataSourceKey.get();
-        DataSource dataSource = super.determineTargetDataSource();
 
-        DataSourceType type = lookupKey.getDataSourceType();
-        if (dataSource instanceof MultiDataSource) {
+        DataSource dataSource = super.determineTargetDataSource();
+        DataSourcePartitionType lookupKey = dataSourcePartitionType.get();
+        String type = null;
+        if (lookupKey != null){
+            type = lookupKey.getType();
+        }
+        if (dataSource instanceof DataSourcePartition) {
             /** 多数据源处理 */
-            MultiDataSource multiDataSource = (MultiDataSource) dataSource;
-            DataSource ds = multiDataSource.getDataSource(type);
+            DataSourcePartition dataSourcePartition = (DataSourcePartition) dataSource;
+            DataSource ds = dataSourcePartition.getDataSource(type);
 
             if (ds == null) {
                 throw new IllegalStateException("Cannot determine target DataSource for lookup key [" + lookupKey + "] type [" + type + "]");
@@ -58,11 +62,12 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
     @Override
     protected DataSource resolveSpecifiedDataSource(Object dataSource) throws IllegalArgumentException {
         if (dataSource instanceof Map) {
-            MultiDataSource multiDataSource = new MultiDataSource();
+            DataSourcePartition dataSourcePartition = new DataSourcePartition();
             for (Object key : ((Map) dataSource).keySet()) {
-                multiDataSource.addDataSource(key, multiDataSource);
+                DataSourcePartitionType type = new DataSourcePartitionType((String) key);
+                dataSourcePartition.addDataSource(type.getType(), (DataSource) ((Map) dataSource).get(key));
             }
-            return multiDataSource;
+            return dataSourcePartition;
         }
         return super.resolveSpecifiedDataSource(dataSource);
     }
@@ -79,44 +84,29 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
         /** 根据事务进行确定 */
         // 事务能吧读写分开 但是不能知道慢读  所以这里要采用2种策略
         boolean readOnly = TransactionSynchronizationManager.isCurrentTransactionReadOnly();
-        DataSourceKey key = dataSourceKey.get();
-
+        DataSourcePartitionType type = dataSourcePartitionType.get();
         /** 采用默认策略 */
-        if (key == null) return null;
+        if (type == null) type = new DataSourcePartitionType();
 
         if (readOnly) {
-            key.setDataSourceType(DataSourceType.READ);
+            type.setType("read");
         } else {
-            key.setDataSourceType(DataSourceType.WRITE);
+            type.setType("write");
         }
         // TODO 后续接口 支撑 慢读 等扩展
 
-
-        return key.getName();
+        dataSourcePartitionType.set(type);
+        return type;
     }
 
 
-    /**
-     * 依靠该键值取数据源
-     */
-    public static class DataSourceKey {
-        private String name;
-        private DataSourceType dataSourceType;
-
-        public String getName() {
-            return name;
+    @Override
+    protected Object resolveSpecifiedLookupKey(Object lookupKey) {
+        if (lookupKey instanceof DataSourcePartitionType){
+            DataSourcePartitionType type = (DataSourcePartitionType) lookupKey;
+            return type.getName();
         }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public DataSourceType getDataSourceType() {
-            return dataSourceType;
-        }
-
-        public void setDataSourceType(DataSourceType dataSourceType) {
-            this.dataSourceType = dataSourceType;
-        }
+        return super.resolveSpecifiedLookupKey(lookupKey);
     }
+
 }
