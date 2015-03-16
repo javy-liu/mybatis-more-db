@@ -7,7 +7,7 @@ package org.oyach.mybatis.datasource;
  * @version Last modified 15/3/6
  * @since 0.0.1
  */
-public class DataSourcePartitionType {
+public class DataSourceType {
 
     public static final String NAME_AND_TYPE_SPLIT = "#";
 
@@ -21,13 +21,18 @@ public class DataSourcePartitionType {
      */
     private String type;
 
-    public DataSourcePartitionType() {
+    public DataSourceType() {
     }
 
-    public DataSourcePartitionType(String nameAndType) {
+    public DataSourceType(String nameAndType) {
         String[] arr = nameAndType.split(NAME_AND_TYPE_SPLIT);
         this.name = arr[0];
         this.type = arr[1];
+    }
+
+    public DataSourceType(String name, String type) {
+        this.name = name;
+        this.type = type;
     }
 
     public String getName() {
@@ -50,9 +55,9 @@ public class DataSourcePartitionType {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof DataSourcePartitionType)) return false;
+        if (!(o instanceof DataSourceType)) return false;
 
-        DataSourcePartitionType that = (DataSourcePartitionType) o;
+        DataSourceType that = (DataSourceType) o;
 
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
         if (type != null ? !type.equals(that.type) : that.type != null) return false;

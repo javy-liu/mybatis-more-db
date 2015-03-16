@@ -1,7 +1,6 @@
 package org.oyach.mybatis.domain;
 
 import org.junit.Test;
-import org.oyach.mybatis.datasource.DataSourcePartitionType;
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.NamedThreadLocal;
 

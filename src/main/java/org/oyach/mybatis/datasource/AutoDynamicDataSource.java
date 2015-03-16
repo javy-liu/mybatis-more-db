@@ -16,6 +16,8 @@ public class AutoDynamicDataSource extends DynamicDataSource{
 
     private ConfigFactory configFactory;
 
+    private String defaultTargetDataSourceType;
+
     public ConfigFactory getConfigFactory() {
         return configFactory;
     }
@@ -32,4 +34,17 @@ public class AutoDynamicDataSource extends DynamicDataSource{
         super.afterPropertiesSet();
     }
 
+
+    @Override
+    protected Object determineCurrentLookupKey() {
+        return super.determineCurrentLookupKey();
+    }
+
+    public String getDefaultTargetDataSourceType() {
+        return defaultTargetDataSourceType;
+    }
+
+    public void setDefaultTargetDataSourceType(String defaultTargetDataSourceType) {
+        this.defaultTargetDataSourceType = defaultTargetDataSourceType;
+    }
 }

@@ -15,18 +15,21 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.METHOD})
 public @interface UseDataSource {
+
     /**
-     * 指定使用什么样的数据源
+     * 指定使用的数据区
      *
      * @return
      */
-    String type();
+    DataSource[] dataSource() default {};
 
-    /**
-     * 指定使用哪些数据源
-     *
-     * @return
-     */
-    String[] dataSource() default {};
 
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target({})
+    @interface DataSource {
+
+        String name() default "";
+
+        String type() default "";
+    }
 }

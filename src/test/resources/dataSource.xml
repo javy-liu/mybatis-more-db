@@ -9,7 +9,7 @@
 
     <aop:aspectj-autoproxy/>
 
-    <!-- 数据源 -->
+    <!-- 多数据源构造 -->
     <bean id="dataSourceConfigFactory" class="org.oyach.mybatis.datasource.config.DataSourcePartitionConfigFactory">
         <property name="defaultDataSourceProperty">
             <bean class="org.oyach.mybatis.datasource.config.DataSourceProperty">
@@ -50,7 +50,9 @@
     <!--</bean>-->
 
     <bean id="dynamicDataSource" class="org.oyach.mybatis.datasource.AutoDynamicDataSource">
+        <!-- 多数据源构造工厂 -->
        <property name="configFactory" ref="dataSourceConfigFactory"/>
+        <!-- 默认数据源 -->
         <property name="defaultTargetDataSource">
             <bean class="org.springframework.jdbc.datasource.DriverManagerDataSource">
                 <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
@@ -59,6 +61,8 @@
                 <property name="password" value="root"/>
             </bean>
         </property>
+        <!-- 默认数据类型 -->
+        <property name="defaultTargetDataSourceType" value="write"/>
     </bean>
 
 
@@ -85,12 +89,12 @@
     </bean>
 
     <bean id="mybatisTransactionManager"
-          class="org.springframework.jdbc.datasource.DataSourceTransactionManager" lazy-init="true">
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="dynamicDataSource"/>
     </bean>
 
 
-    <tx:annotation-driven transaction-manager="mybatisTransactionManager" />
+    <tx:annotation-driven transaction-manager="mybatisTransactionManager" order="2"/>
 
     <tx:advice id="mybatisAdvice" transaction-manager="mybatisTransactionManager">
         <tx:attributes>
@@ -116,8 +120,9 @@
 
     <aop:config>
         <aop:pointcut id="pc" expression="execution(public * org.oyach.mybatis.dao.*.*(..))" />
-        <aop:advisor advice-ref="useDataSourceSupport" pointcut-ref="pc"/>
-        <aop:advisor pointcut-ref="pc" advice-ref="mybatisAdvice" />
+        <!-- 必须保证该aop先于aop事务和注解事务 -->
+        <aop:advisor advice-ref="useDataSourceSupport" pointcut-ref="pc" order="0"/>
+        <aop:advisor pointcut-ref="pc" advice-ref="mybatisAdvice" order="1" />
     </aop:config>
 
 </beans>

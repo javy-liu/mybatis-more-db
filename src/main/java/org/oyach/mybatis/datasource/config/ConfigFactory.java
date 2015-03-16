@@ -1,10 +1,5 @@
 package org.oyach.mybatis.datasource.config;
 
-import org.oyach.mybatis.datasource.DataSourcePartition;
-import org.oyach.mybatis.datasource.DataSourcePartitionType;
-
-import javax.sql.DataSource;
-import java.util.List;
 import java.util.Map;
 
 /**

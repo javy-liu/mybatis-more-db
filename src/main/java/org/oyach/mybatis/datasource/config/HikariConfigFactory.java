@@ -1,18 +1,7 @@
 package org.oyach.mybatis.datasource.config;
 
-import com.zaxxer.hikari.HikariConfig;
-import org.oyach.mybatis.datasource.DataSourcePartition;
-import org.oyach.mybatis.datasource.DataSourcePartitionType;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanNameAware;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.beans.factory.support.BeanDefinitionRegistry;
-import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
+import org.oyach.mybatis.datasource.DataSourceType;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-
-import java.util.List;
 
 /**
  * Hikari数据连接池的配置实现
@@ -37,7 +26,7 @@ public class HikariConfigFactory  {
     /**
      * 数据区类型
      */
-    private DataSourcePartitionType dataSourcePartitionType;
+    private DataSourceType dataSourceType;
 
 
 

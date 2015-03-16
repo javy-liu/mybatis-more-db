@@ -1,7 +1,5 @@
 package org.oyach.mybatis.domain;
 
-import org.oyach.mybatis.datasource.DataSourcePartitionType;
-
 /**
  * @author liuzhenyuan
  * @version Last modified 15/3/11

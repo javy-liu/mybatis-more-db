@@ -1,17 +1,13 @@
 package org.oyach.mybatis.datasource.config;
 
-import org.oyach.mybatis.datasource.DataSourcePartition;
-import org.oyach.mybatis.datasource.DataSourcePartitionType;
+import org.oyach.mybatis.datasource.DataSourceType;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.util.StringUtils;
 
-import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -76,13 +72,9 @@ public class DataSourcePartitionConfigFactory extends AbstrtractConfigFactory {
     @Override
     public Map<Object, Object> buildDataSourcePartitions() {
         Map<Object, Object> dataSourcePartitionMap = new LinkedHashMap<>();
-
         for (String beanName : beanNames){
             DriverManagerDataSource driverManagerDataSource = applicationContext.getBean(beanName, DriverManagerDataSource.class);
-
-            DataSourcePartitionType type = new DataSourcePartitionType(beanName);
-
-            dataSourcePartitionMap.put(type, driverManagerDataSource);
+            dataSourcePartitionMap.put(beanName, driverManagerDataSource);
         }
         return dataSourcePartitionMap;
     }
