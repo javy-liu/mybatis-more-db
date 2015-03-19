@@ -36,35 +36,11 @@ public class MoreDataBasePlugin implements Interceptor {
             return invocation.proceed();
         }
 
-        List<DataSourceType> dataSourceTypes = useDataSourceMetaData.getDataSourceTypes();
+        InvocationWrapper invocationWrapper = new InvocationWrapper(useDataSourceMetaData, invocation);
 
-        Object obj = null;
-        for (DataSourceType dataSourceType : dataSourceTypes){
-            DataSourcePartitionManager.setCurrentDataSourceName(dataSourceType.getName());
-            DataSourcePartitionManager.setCurrentDataSourceType(dataSourceType.getType());
-            /** 合并结果 */
-            obj = mergeResult(invocation, obj);
-        }
-        return obj;
+        return invocationWrapper.proceed();
     }
 
-    /**
-     * 合并结果
-     *
-     * @param invocation
-     * @param object
-     * @return
-     * @throws Throwable
-     */
-    private Object mergeResult(Invocation invocation, Object object) throws Throwable {
-        Object result = invocation.proceed();
-        if ((result instanceof List) && (object == null)){
-            return result;
-        } else if ((result instanceof List) && (object instanceof List)){
-            return ((List) object).addAll((Collection) result);
-        }
-        return object;
-    }
 
     @Override
     public Object plugin(Object target) {
