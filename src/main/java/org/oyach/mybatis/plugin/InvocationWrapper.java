@@ -51,7 +51,7 @@ public class InvocationWrapper {
             /** 合并结果 */
 //            obj = mergeResult(invocation, obj);
         }
-        return invocation.getMethod().invoke(invocation.getTarget(), args);
+        return invocation.getMethod().invoke(invocation.getTarget(), invocation.getArgs());
     }
 
     /**

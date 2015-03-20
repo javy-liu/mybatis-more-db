@@ -14,7 +14,6 @@ buildscript {
 }
 
 apply plugin: 'me.champeau.gradle.jmh'
-apply plugin: 'jmeter'
 
 
 task wrapper(type: Wrapper) {

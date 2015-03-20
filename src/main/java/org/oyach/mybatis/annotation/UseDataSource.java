@@ -23,6 +23,13 @@ public @interface UseDataSource {
      */
     DataSource[] dataSource() default {};
 
+    /**
+     * 散表维度
+     *
+     * @return
+     */
+    ShardBy[] shardBy() default {};
+
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target({})
@@ -31,5 +38,14 @@ public @interface UseDataSource {
         String name() default "";
 
         String type() default "";
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target({})
+    @interface ShardBy {
+
+        String[] name() default {};
+
+        String[] type() default {};
     }
 }

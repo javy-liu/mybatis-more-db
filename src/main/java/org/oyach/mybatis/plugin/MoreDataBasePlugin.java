@@ -42,9 +42,18 @@ public class MoreDataBasePlugin implements Interceptor {
     }
 
 
+    /**
+     * 只拦截Executor
+     *
+     * @param target
+     * @return
+     */
     @Override
     public Object plugin(Object target) {
-        return Plugin.wrap(target, this);
+        if (target instanceof Executor){
+            return Plugin.wrap(target, this);
+        }
+        return target;
     }
 
     @Override

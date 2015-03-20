@@ -6,6 +6,9 @@ import org.aopalliance.intercept.MethodInvocation;
 import org.oyach.mybatis.annotation.UseDataSource;
 import org.oyach.mybatis.datasource.DataSourcePartitionManager;
 import org.oyach.mybatis.datasource.DataSourceType;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.NamedThreadLocal;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,12 +28,16 @@ import java.util.List;
  * @version Last modified 15/3/11
  * @since 0.0.1
  */
-public class UseDataSourceSupport implements MethodInterceptor {
+public class UseDataSourceSupport implements MethodInterceptor, ApplicationContextAware {
     /**
      * 拦截事务的通知
      */
     private TransactionInterceptor advice;
 
+    /**
+     * 记录springContext对象方便插件获取spring内容
+     */
+    private ApplicationContext applicationContext;
 
     /**
      * 处理@UseDataSource注解逻辑，如果没有该标签进行默认处理
@@ -41,7 +48,7 @@ public class UseDataSourceSupport implements MethodInterceptor {
      */
     @Override
     public Object invoke(MethodInvocation invocation) throws Throwable {
-        UseDataSourceMetaData useDataSourceMetaData = new UseDataSourceMetaData();
+        UseDataSourceMetaData useDataSourceMetaData = new UseDataSourceMetaData(applicationContext);
 
         Method method = invocation.getMethod();
         Class clazz = invocation.getThis().getClass();
@@ -108,5 +115,10 @@ public class UseDataSourceSupport implements MethodInterceptor {
 
     public void setAdvice(TransactionInterceptor advice) {
         this.advice = advice;
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
     }
 }

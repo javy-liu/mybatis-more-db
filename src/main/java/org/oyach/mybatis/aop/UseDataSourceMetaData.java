@@ -1,6 +1,7 @@
 package org.oyach.mybatis.aop;
 
 import org.oyach.mybatis.datasource.DataSourceType;
+import org.springframework.context.ApplicationContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,8 +13,10 @@ import java.util.List;
  */
 public class UseDataSourceMetaData {
     private List<DataSourceType> dataSourceTypes = new ArrayList<>();
+    private ApplicationContext applicationContext;
 
-    public UseDataSourceMetaData() {
+    public UseDataSourceMetaData(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
     }
 
     public List<DataSourceType> getDataSourceTypes() {
