@@ -51,6 +51,9 @@ public class DataSourceType {
         this.type = type;
     }
 
+    public String getDataSourceKey(){
+        return name + NAME_AND_TYPE_SPLIT + type;
+    }
 
     @Override
     public boolean equals(Object o) {

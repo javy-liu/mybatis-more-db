@@ -9,6 +9,7 @@ import org.oyach.mybatis.datasource.DataSourcePartitionManager;
 import org.oyach.mybatis.datasource.DataSourceType;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.List;
 
@@ -48,8 +49,12 @@ public class InvocationWrapper {
         for (DataSourceType dataSourceType : dataSourceTypes){
             DataSourcePartitionManager.setCurrentDataSourceName(dataSourceType.getName());
             DataSourcePartitionManager.setCurrentDataSourceType(dataSourceType.getType());
-            /** 合并结果 */
-//            obj = mergeResult(invocation, obj);
+            try {
+                /** 合并结果 */
+                obj = mergeResult(invocation);
+            } catch (Throwable throwable) {
+                throw new InvocationTargetException(throwable);
+            }
         }
         return invocation.getMethod().invoke(invocation.getTarget(), invocation.getArgs());
     }
@@ -58,12 +63,13 @@ public class InvocationWrapper {
      * 合并结果
      *
      * @param invocation
-     * @param object
      * @return
      * @throws Throwable
      */
-    private Object mergeResult(Invocation invocation, Object object) throws Throwable {
-       return null;
+    private Object mergeResult(Invocation invocation) throws Throwable {
+        Method method = invocation.getMethod();
+
+        return null;
     }
 
     /**
