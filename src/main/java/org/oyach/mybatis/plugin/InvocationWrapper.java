@@ -10,6 +10,7 @@ import org.oyach.mybatis.datasource.DataSourceType;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -32,6 +33,11 @@ public class InvocationWrapper {
     public InvocationWrapper(UseDataSourceMetaData useDataSourceMetaData, Invocation invocation) {
         this.invocation = invocation;
         this.useDataSourceMetaData = useDataSourceMetaData;
+
+        args = new Object[invocation.getArgs().length];
+        for (int i = 1; i < invocation.getArgs().length; i++) {
+            args[i] = invocation.getArgs()[i];
+        }
     }
 
 
@@ -45,13 +51,14 @@ public class InvocationWrapper {
     public Object proceed() throws InvocationTargetException, IllegalAccessException {
         List<DataSourceType> dataSourceTypes = useDataSourceMetaData.getDataSourceTypes();
 
-        Object obj = null;
+        List<Object> result = new ArrayList<>();
         for (DataSourceType dataSourceType : dataSourceTypes){
             DataSourcePartitionManager.setCurrentDataSourceName(dataSourceType.getName());
             DataSourcePartitionManager.setCurrentDataSourceType(dataSourceType.getType());
             try {
                 /** 合并结果 */
-                obj = mergeResult(invocation);
+                Object obj = mergeResult(invocation);
+                result.addAll((List)obj);
             } catch (Throwable throwable) {
                 throw new InvocationTargetException(throwable);
             }
@@ -69,7 +76,12 @@ public class InvocationWrapper {
     private Object mergeResult(Invocation invocation) throws Throwable {
         Method method = invocation.getMethod();
 
-        return null;
+        MappedStatement mappedStatement = (MappedStatement) invocation.getArgs()[0];
+        //TODO 构造新的SqlSource
+
+        args[0] = buildMappedStatement(mappedStatement, mappedStatement.getSqlSource());
+        Object obj = method.invoke(invocation.getTarget(), args);
+        return obj;
     }
 
     /**
