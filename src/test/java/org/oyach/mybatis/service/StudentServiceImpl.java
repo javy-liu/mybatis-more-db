@@ -22,7 +22,8 @@ public class StudentServiceImpl implements StudentService {
         Student student = new Student();
         student.setId(8L);
         student.setName("oaych");
-        long row = studentMapper.insertStudent(student);
+//        long row = studentMapper.insertStudent(student);
+        long row = 1;
         return row + "";
     }
 }

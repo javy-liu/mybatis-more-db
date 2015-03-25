@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.oyach.mybatis.dao.StudentMapper">
+
+
+    <sql id="all_fields">
+        id, name, owner
+    </sql>
+
+    <insert id="insertStudents" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id"  keyColumn="id">
+        insert
+        into student (name)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.name})
+        </foreach>
+
+    </insert>
+
+</mapper>

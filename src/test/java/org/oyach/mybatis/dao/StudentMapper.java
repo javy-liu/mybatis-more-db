@@ -1,6 +1,7 @@
 package org.oyach.mybatis.dao;
 
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 import org.oyach.mybatis.annotation.UseDataSource;
 import org.oyach.mybatis.domain.Student;
@@ -16,11 +17,12 @@ import java.util.List;
 @Transactional(readOnly = true)
 public interface StudentMapper {
 
-//    @Transactional(readOnly = true)
+    @Transactional(readOnly = true)
     @UseDataSource(dataSource = {
             @UseDataSource.DataSource(name = "db_01", type = "read")
     })
-    @Insert("insert into student(id, name) values(#{id},#{name})")
+    @Insert("insert into student(name) values(#{name})")
+    @Options(useGeneratedKeys = true, keyProperty = "id")
     long insertStudent(Student student);
 
     @UseDataSource(dataSource = {
@@ -40,4 +42,7 @@ public interface StudentMapper {
     })
     @Select("select id, name from student where id != #{id}")
     List<Student> selectAllUsers(long id);
+
+    @Transactional
+    long insertStudents(List<Student> students);
 }
