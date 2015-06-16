@@ -73,6 +73,9 @@
         <property name="configLocation" value="classpath:mybatis-config.xml"/>
         <!-- 配置扫描Mapper XML的位置,如果没有的可以删除,Mapper XML的暂时不支持 -->
         <property name="mapperLocations" value="classpath:mapper/*.xml"/>
+        <property name="failFast" value="true"/>
+        <property name="objectFactory" value=""/>
+        <property name="typeAliasesPackage" value="org"/>
     </bean>
 
 
